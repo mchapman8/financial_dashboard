@@ -460,7 +460,7 @@ body {
   <div class="card">
     <div class="card-label">Net Worth</div>
     <div class="card-value accent">$324,733</div>
-    <div class="card-sub">Liquid $124,408 · Assets $297,976 · Debt $97,651</div>
+    <div class="card-sub">Cash $44,143 · Stocks $80,266 · Assets $297,976 · Debt $97,651</div>
     <div class="change-row">
       <div class="change-item">
         <div class="change-period">1 WK</div>
@@ -481,50 +481,163 @@ body {
     </div>
   </div>
 
-  <!-- Key metrics grid -->
+  <!-- Two-tier liquid display -->
+  <div class="section-title" style="margin-top:4px">Liquid — Two Tiers</div>
   <div class="grid2">
     <div class="mini-card">
-      <div class="mini-label">Total Liquid</div>
-      <div class="mini-value accent">$124,408</div>
-      <div class="mini-sub">All accessible accounts</div>
+      <div class="mini-label">True Liquid (Cash)</div>
+      <div class="mini-value accent">$44,143</div>
+      <div class="mini-sub">Savings + checking accounts</div>
     </div>
+    <div class="mini-card">
+      <div class="mini-label">Investment Liquid</div>
+      <div class="mini-value" style="color:var(--purple)">$80,266</div>
+      <div class="mini-sub">Stock portfolio — stays invested</div>
+    </div>
+  </div>
+
+  <!-- Account structure -->
+  <div class="card">
+    <div class="chart-title">Account Structure — Roles & Balances</div>
+    <table class="data-table">
+      <tr>
+        <td class="lbl">PNC Checking <span style="font-size:10px;color:var(--text3)">(transit hub)</span></td>
+        <td class="val warn">$1,918</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Direct deposit lands here · bills parsed every 2 weeks · $300 buffer target</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="lbl">PNC Short Term <span style="font-size:10px;color:var(--text3)">(fixed backstop)</span></td>
+        <td class="val">$3,000</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Static 1-month fixed expense reserve · target $1,500–$2,000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="lbl">PNC Long Term <span style="font-size:10px;color:var(--text3)">(tax + travel + shopping)</span></td>
+        <td class="val up">$7,220</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Tax reserve $1,904 · Travel $3,400 · Shopping $300 · Buffer $1,616</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="lbl">Apple Savings <span style="font-size:10px;color:var(--text3)">(emergency + car + home)</span></td>
+        <td class="val">$21,603</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Emergency fund $21,603 of $33,708 target · car + home build after funded</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="lbl">ACME Regular <span style="font-size:10px;color:var(--text3)">(yield TBD · role TBD)</span></td>
+        <td class="val warn">$10,133</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Awaiting yield rate check · potential consolidation into Apple Savings</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="lbl">Apple Cash <span style="font-size:10px;color:var(--text3)">(digital float)</span></td>
+        <td class="val warn">$139</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Digital cash equivalent · target $75 · top up from PNC Checking</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="lbl">Cash <span style="font-size:10px;color:var(--text3)">(physical float)</span></td>
+        <td class="val warn">$130</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Physical cash · target $75 · currently $55 short</td>
+        <td></td>
+      </tr>
+      <tr class="total">
+        <td class="lbl">Total true liquid</td>
+        <td class="val accent">$44,143</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Key metrics -->
+  <div class="grid2">
     <div class="mini-card">
       <div class="mini-label">Total Debt</div>
       <div class="mini-value amber">$97,651</div>
       <div class="mini-sub up">↓ $1,624 YTD</div>
     </div>
-  </div>
-
-  <div class="grid2">
     <div class="mini-card">
       <div class="mini-label">Monthly Burn</div>
       <div class="mini-value">$5,618</div>
-      <div class="mini-sub">3-month rolling avg</div>
+      <div class="mini-sub">3-month rolling avg · Tier 2</div>
     </div>
+  </div>
+
+  <div class="grid2">
     <div class="mini-card">
       <div class="mini-label">Savings Rate</div>
       <div class="mini-value accent">34%</div>
       <div class="mini-sub">of total income saved</div>
     </div>
+    <div class="mini-card">
+      <div class="mini-label">Cash Runway</div>
+      <div class="mini-value amber">235 days</div>
+      <div class="mini-sub warn">True liquid ÷ daily burn</div>
+    </div>
   </div>
 
-  <!-- Days covered — hero stat -->
+  <!-- Operating buffer system -->
   <div class="card">
-    <div class="card-label">Financial Runway</div>
-    <div class="card-value accent">662 days</div>
-    <div class="card-sub">Liquid ÷ daily burn rate · 1 year 10 months of coverage</div>
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+    <div class="chart-title">Operating Buffer System — Locked Apr 2026</div>
+    <table class="data-table">
+      <tr><td class="lbl">Current burn rate tier</td><td class="val accent">Tier 2 · $5,000–$6,500</td></tr>
+      <tr><td class="lbl">PNC Checking buffer target</td><td class="val">$300 after bills</td></tr>
+      <tr><td class="lbl">Total cash float target</td><td class="val">$150 ($75 Apple Cash + $75 physical)</td></tr>
+      <tr><td class="lbl">Apple Cash current vs target</td><td class="val warn">$139 / $75 target ✓ (above)</td></tr>
+      <tr><td class="lbl">Physical cash current vs target</td><td class="val warn">$130 / $75 target ✓ (above)</td></tr>
+    </table>
+    <div class="divider"></div>
+    <div style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.8">
+      Tier 3 trigger ($6,500–$8,000 burn): checking $400 · cash $200<br>
+      Tier 4 trigger ($8,000–$10,000 burn): checking $500 · cash $250<br>
+      Buffers scale with burn rate — reviewed at tier crossings only
+    </div>
+  </div>
+
+  <!-- Emergency fund — corrected status -->
+  <div class="card">
+    <div class="card-label">Emergency Fund — True Liquid Only</div>
+    <div class="card-value amber">$21,603</div>
+    <div class="card-sub warn">of $33,708 target (6-month) · growing to $50,562 (9-month)</div>
+    <div style="margin-top:14px">
       <div class="progress-header">
-        <span class="progress-label" style="font-size:11px;color:var(--text2)">9-month emergency target</span>
-        <span class="progress-pct">662 / 270 days</span>
+        <span class="progress-label">6-month target: $33,708</span>
+        <span class="progress-pct">64% funded</span>
       </div>
-      <div class="progress-bg"><div class="progress-fill full" style="width:100%"></div></div>
-      <div class="progress-sub">✓ Fully funded — 2.4× above 9-month target</div>
+      <div class="progress-bg"><div class="progress-fill warn" style="width:64%"></div></div>
+      <div class="progress-sub warn">⚠ $12,105 short of 6-month target · ACME consolidation closes to $1,972 gap</div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="progress-header">
+        <span class="progress-label">9-month goal: $50,562</span>
+        <span class="progress-pct">43% funded</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill low" style="width:43%"></div></div>
+      <div class="progress-sub">Long-term target — grows as Apple Savings builds</div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.8">
+      Stock portfolio ($80,266) excluded — investment asset, not spending reserve<br>
+      Car + home buckets activate after 6-month target is reached
     </div>
   </div>
 
   <!-- Credit & Rewards -->
-  <div class="section-title" style="margin-top:20px">Credit & Rewards</div>
+  <div class="section-title" style="margin-top:4px">Credit & Rewards</div>
   <div class="grid2">
     <div class="mini-card">
       <div class="mini-label">Chase Score</div>
@@ -762,58 +875,133 @@ body {
      SECTION 4 — GOALS
 ══════════════════════════════════════════ -->
 <section class="section" id="s-goals">
-  <div class="section-title">Savings Goals</div>
+  <div class="section-title">Goals & Allocations</div>
 
-  <!-- Emergency Fund -->
-  <div class="section-title" style="margin-top:0">Emergency Fund — 9 Months</div>
+  <!-- TRUE LIQUID ALLOCATION MASTER VIEW -->
+  <div class="card" style="border-color:var(--border2)">
+    <div class="card-label">True Liquid Allocation — April 12, 2026</div>
+    <div class="card-value accent">$44,143</div>
+    <div class="card-sub">Cash accounts only · Stock portfolio ($80,266) excluded — investment</div>
+    <div class="divider"></div>
+    <table class="data-table">
+      <tr><td class="lbl">Emergency fund · Apple Savings (6-mo target)</td><td class="val warn">$33,708 target</td></tr>
+      <tr><td class="lbl" style="font-size:11px;color:var(--text3);padding-bottom:6px">Currently $21,603 funded · $12,105 short · ACME consolidation closes to $1,972</td><td></td></tr>
+      <tr><td class="lbl">2025 tax balance · PNC Long Term</td><td class="val dn">$1,289 ⚠ pay now</td></tr>
+      <tr><td class="lbl">2026 LIAP tax reserve · PNC Long Term</td><td class="val warn">$615</td></tr>
+      <tr><td class="lbl">Travel — all 5 committed trips · PNC Long Term</td><td class="val accent">$3,400 ✓ funded</td></tr>
+      <tr><td class="lbl">Shopping seed · PNC Long Term</td><td class="val">$300</td></tr>
+      <tr><td class="lbl">PNC Short Term backstop</td><td class="val">$3,000</td></tr>
+      <tr><td class="lbl">Operating buffers (checking + cash float)</td><td class="val">~$450</td></tr>
+      <tr><td class="lbl">Home purchase · Apple Savings</td><td class="val accent">$0 → activates after 6-mo EF</td></tr>
+      <tr><td class="lbl">Car fund · Apple Savings</td><td class="val accent">$0 → activates after 6-mo EF</td></tr>
+      <tr class="total"><td class="lbl">Total accounted for</td><td class="val">$44,143 ✓</td></tr>
+    </table>
+  </div>
+
+  <!-- INCOME WATERFALL -->
+  <div class="section-title" style="margin-top:4px">Income Waterfall — Priority Order</div>
   <div class="card">
-    <div class="card-label">9-Month Target (3M avg burn × 9)</div>
-    <div class="card-value accent">$50,562</div>
-    <div class="card-sub">Target based on $5,618/mo average burn</div>
-    <div style="margin-top:14px">
-      <div class="progress-header">
-        <span class="progress-label">Current liquid: $124,408</span>
-        <span class="progress-pct">246% funded</span>
-      </div>
-      <div class="progress-bg"><div class="progress-fill full" style="width:100%"></div></div>
-      <div class="progress-sub">✓ $73,846 above target — surplus available for other goals</div>
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start">
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--red-dim);border:1px solid var(--red);color:var(--red);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace">1</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Clear 2025 tax balance — $1,289 today</div><div style="font-size:12px;color:var(--text2)">Earmarked in PNC Long Term · June 15 deadline · pay now</div></div>
+    </div>
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start">
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace">2</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Top up Apple Savings to $33,708</div><div style="font-size:12px;color:var(--text2)">$12,105 needed · ACME consolidation closes gap to $1,972 immediately</div></div>
+    </div>
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start">
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace">3</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Cover near-term travel (Apr + May) — $2,600</div><div style="font-size:12px;color:var(--text2)">All earmarked in PNC Long Term · Joshua Tree (5 days!) → Disney → Sphere → Furnace Creek</div></div>
+    </div>
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start">
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--blue-dim);border:1px solid var(--blue);color:var(--blue);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace">4</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Once 6-mo funded: Apple Savings surplus splits 50/50</div><div style="font-size:12px;color:var(--text2)">50% → car fund · 50% → home purchase · both grow within Apple Savings</div></div>
+    </div>
+    <div style="padding:10px 0;display:flex;gap:12px;align-items:flex-start">
+      <div style="width:26px;height:26px;border-radius:50%;background:rgba(167,139,250,0.12);border:1px solid var(--purple);color:var(--purple);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace">5</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Shopping — piece by piece from PNC Long Term</div><div style="font-size:12px;color:var(--text2)">Priority: LIAP gear (deductible) → personal tech → golf · $300 seeded</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="flag g" style="margin-bottom:0">
+      <div class="flag-title">Audia Cup June — the inflection point for all goals</div>
+      <div class="flag-body">Net proceeds ~$3,430–$5,180 after 30% tax reserve. That single payment closes the emergency fund gap AND covers all 2026 travel — with up to $3,000 left to begin car/home split. June changes everything.</div>
     </div>
   </div>
 
-  <!-- Home Purchase -->
-  <div class="section-title" style="margin-top:4px">Home Purchase — Affordability</div>
+  <!-- EMERGENCY FUND -->
+  <div class="section-title" style="margin-top:4px">Emergency Fund — Apple Savings</div>
+  <div class="card">
+    <div class="grid2" style="margin-bottom:14px">
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">CURRENT BALANCE</div>
+        <div style="font-size:22px;font-weight:700;color:var(--amber)">$21,603</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">GAP TO 6-MO TARGET</div>
+        <div style="font-size:22px;font-weight:700;color:var(--red)">−$12,105</div>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="progress-header">
+        <span class="progress-label">6-month target: $33,708</span>
+        <span class="progress-pct" style="color:var(--amber)">64%</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill warn" style="width:64%"></div></div>
+      <div class="progress-sub warn">⚠ Underfunded · ACME consolidation closes gap to $1,972</div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="progress-header">
+        <span class="progress-label">9-month goal: $50,562</span>
+        <span class="progress-pct" style="color:var(--red)">43%</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill low" style="width:43%"></div></div>
+      <div class="progress-sub">Long-term target — builds after 6-month secured</div>
+    </div>
+    <table class="data-table">
+      <tr><td class="lbl">Monthly burn rate (3M avg)</td><td class="val">$5,618</td></tr>
+      <tr><td class="lbl">6-month target</td><td class="val warn">$33,708</td></tr>
+      <tr><td class="lbl">9-month goal</td><td class="val">$50,562</td></tr>
+      <tr><td class="lbl">Currently funded</td><td class="val amber">$21,603</td></tr>
+      <tr><td class="lbl">If ACME consolidated (+$10,133)</td><td class="val accent">$31,736</td></tr>
+      <tr class="total"><td class="lbl">Gap after ACME consolidation</td><td class="val up">only −$1,972</td></tr>
+    </table>
+  </div>
+
+  <!-- HOME PURCHASE -->
+  <div class="section-title" style="margin-top:4px">Home Purchase — Apple Savings (post 6-mo EF)</div>
   <div class="afford-card">
     <div class="afford-header">
-      <div class="afford-title">What You Can Afford Now</div>
+      <div class="afford-title">Affordable Home Price Now</div>
       <div class="afford-badge">20% DOWN</div>
     </div>
-    <div class="afford-amount">$205,000</div>
-    <div class="afford-sub">Based on current savings + Regent St equity</div>
-    <div class="afford-row"><div class="afford-lbl">Regent Street equity</div><div class="afford-val">~$41,000</div></div>
-    <div class="afford-row"><div class="afford-lbl">Liquid available for DP</div><div class="afford-val">~$0 additional</div></div>
-    <div class="afford-row"><div class="afford-lbl">Total down payment capacity</div><div class="afford-val">~$41,000</div></div>
-    <div class="afford-row"><div class="afford-lbl">20% of = affordable home</div><div class="afford-val">~$205,000</div></div>
-    <div class="afford-row"><div class="afford-lbl">Status</div><div class="afford-val" style="color:var(--amber)">Tied to relocation</div></div>
+    <div class="afford-amount">$180,490</div>
+    <div class="afford-sub">Regent St equity only · home bucket activates after EF funded</div>
+    <div class="afford-row"><div class="afford-lbl">Regent St equity</div><div class="afford-val">~$36,098</div></div>
+    <div class="afford-row"><div class="afford-lbl">Home bucket allocated</div><div class="afford-val accent">$0 → 50% of Apple Savings surplus</div></div>
+    <div class="afford-row"><div class="afford-lbl">Total down payment capacity</div><div class="afford-val">~$36,098</div></div>
+    <div class="afford-row"><div class="afford-lbl">Affordable at 20% down</div><div class="afford-val accent">~$180,490</div></div>
+    <div class="afford-row"><div class="afford-lbl">Every +$5K to home bucket</div><div class="afford-val">= +$25K affordable home</div></div>
+    <div class="afford-row"><div class="afford-lbl">Status</div><div class="afford-val" style="color:var(--amber)">Building · tied to Apple relocation</div></div>
     <div class="divider"></div>
-    <div class="flag b" style="margin-bottom:0">
-      <div class="flag-title">Scenario A — Stay in Pittsburgh</div>
-      <div class="flag-body">$205K home affordable now. Every additional $1K saved = $5K more home. Build liquid and watch this number grow weekly.</div>
+    <div style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.8">
+      Scenario A (stay in Pittsburgh): equity + saved cash drives budget up weekly<br>
+      Scenario B (Apple relocation): Regent St sells → equity converts to cash → new market
     </div>
   </div>
 
-  <!-- Car Fund -->
-  <div class="section-title" style="margin-top:4px">New Car — Affordability</div>
+  <!-- CAR FUND -->
+  <div class="section-title" style="margin-top:4px">Car Fund — Apple Savings (post 6-mo EF)</div>
   <div class="afford-card">
     <div class="afford-header">
-      <div class="afford-title">What You Can Finance at $500/mo</div>
-      <div class="afford-badge">TARGET $50K</div>
+      <div class="afford-title">Affordable Vehicle at $500/mo</div>
+      <div class="afford-badge">TARGET $50K+</div>
     </div>
     <div class="afford-amount">$30,150</div>
-    <div class="afford-sub">Current total vehicle budget</div>
-    <div class="afford-row"><div class="afford-lbl">Car fund saved</div><div class="afford-val">$0</div></div>
-    <div class="afford-row"><div class="afford-lbl">Mazda trade-in est.</div><div class="afford-val">$4,650</div></div>
-    <div class="afford-row"><div class="afford-lbl">Financed at $500/mo (60mo, 6.5%)</div><div class="afford-val">$25,500</div></div>
-    <div class="afford-row"><div class="afford-lbl">Total budget now</div><div class="afford-val" style="color:var(--amber)">$30,150</div></div>
+    <div class="afford-sub">Current budget · car bucket gets 50% of Apple Savings surplus post EF</div>
+    <div class="afford-row"><div class="afford-lbl">Car fund saved</div><div class="afford-val accent">$0 → 50% of Apple Savings surplus</div></div>
+    <div class="afford-row"><div class="afford-lbl">Mazda CX-5 trade-in est.</div><div class="afford-val warn">$4,650 (depreciating ~$80/mo)</div></div>
+    <div class="afford-row"><div class="afford-lbl">Financed at $500/mo · 60mo · 6.5%</div><div class="afford-val">$25,500</div></div>
+    <div class="afford-row"><div class="afford-lbl">Total budget today</div><div class="afford-val" style="color:var(--amber)">$30,150</div></div>
     <div class="afford-row"><div class="afford-lbl">Gap to $50K target</div><div class="afford-val" style="color:var(--red)">−$19,850</div></div>
     <div class="divider"></div>
     <div class="progress-header">
@@ -821,27 +1009,51 @@ body {
       <span class="progress-pct">60%</span>
     </div>
     <div class="progress-bg"><div class="progress-fill warn" style="width:60%"></div></div>
-    <div class="progress-sub">Every $1K added to car fund = $1K more vehicle budget</div>
+    <div class="progress-sub">Mazda depreciating ~$80/mo · every $1K saved = $1K more car budget</div>
   </div>
 
-  <!-- Travel Fund -->
-  <div class="section-title" style="margin-top:4px">Travel Fund</div>
+  <!-- TRAVEL -->
+  <div class="section-title" style="margin-top:4px">Travel — PNC Long Term ($3,400 earmarked ✓)</div>
   <div class="card">
-    <div class="card-label">Current Balance</div>
-    <div class="card-value accent">$284</div>
-    <div class="card-sub">Contribute when surplus available</div>
+    <div class="grid2" style="margin-bottom:14px">
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">EARMARKED IN PNC LT</div>
+        <div style="font-size:22px;font-weight:700;color:var(--accent)">$3,400</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">ALL TRIPS FUNDED</div>
+        <div style="font-size:22px;font-weight:700;color:var(--accent)">100% ✓</div>
+      </div>
+    </div>
+    <div class="progress-bg" style="margin-bottom:6px"><div class="progress-fill full" style="width:100%"></div></div>
+    <div class="progress-sub">✓ All 5 committed 2026 trips fully covered from PNC Long Term</div>
     <div class="divider"></div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">Add a trip to check affordability:</div>
-    <div class="flag b">
-      <div class="flag-title">Trip calculator — tell me a destination</div>
-      <div class="flag-body">Each week when you update the file, add a note with your trip destination and estimated budget. I'll calculate if you can afford it now or when you'll have enough based on your contribution pace.</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Joshua Tree Night Photography</div><div style="font-size:11px;color:var(--red);font-family:'JetBrains Mono',monospace">APR 17 — 5 DAYS AWAY</div></div>
+      <div style="text-align:right"><div style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)">~$250</div><div style="font-size:10px;color:var(--accent);font-family:'JetBrains Mono',monospace">FUNDED ✓</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Disney California Hopper ×2</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">APR 19 + APR 26 · Two separate days</div></div>
+      <div style="text-align:right"><div style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)">~$500</div><div style="font-size:10px;color:var(--accent);font-family:'JetBrains Mono',monospace">FUNDED ✓</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Las Vegas — Phish at the Sphere</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">MAY 1–3 · Venetian Hotel · Solo cost</div></div>
+      <div style="text-align:right"><div style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)">~$1,100</div><div style="font-size:10px;color:var(--accent);font-family:'JetBrains Mono',monospace">FUNDED ✓</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Furnace Creek Death Valley</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">MAY 22–24 · Resort + Golf · Solo cost</div></div>
+      <div style="text-align:right"><div style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)">~$750</div><div style="font-size:10px;color:var(--accent);font-family:'JetBrains Mono',monospace">FUNDED ✓</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0">
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Furnace Creek + Vegas w/ Parents</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">SEP 25–28 · Resort + Vegas · Solo cost</div></div>
+      <div style="text-align:right"><div style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)">~$800</div><div style="font-size:10px;color:var(--accent);font-family:'JetBrains Mono',monospace">FUNDED ✓</div></div>
     </div>
     <div class="divider"></div>
-    <div style="font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace">AMEX SkyMiles: 279,601 · Chase pts: 28,770<br>Est. flight value: $2,800–$4,200 (not counted in fund)</div>
+    <div style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace">AMEX SkyMiles 279,601 · Chase pts 28,770 · Est. flight value ~$2,800–$4,200</div>
   </div>
 
-  <!-- LIAP Tax Reserve -->
-  <div class="section-title" style="margin-top:4px">LIAP Tax Reserve — 30%</div>
+  <!-- TAX RESERVE -->
+  <div class="section-title" style="margin-top:4px">Tax Reserve — PNC Long Term</div>
   <div class="card">
     <div class="grid2" style="margin-bottom:14px">
       <div style="text-align:center">
@@ -854,17 +1066,76 @@ body {
       </div>
     </div>
     <table class="data-table">
-      <tr><td class="lbl">LIAP creative income</td><td class="val">$1,050</td></tr>
-      <tr><td class="lbl">Oil & Gas royalties</td><td class="val">$289</td></tr>
-      <tr><td class="lbl">Stock income</td><td class="val">$712</td></tr>
-      <tr><td class="lbl">2025 tax balance still owed</td><td class="val warn">$1,289</td></tr>
-      <tr class="total"><td class="lbl">Total reserve needed</td><td class="val amber">$1,904</td></tr>
+      <tr><td class="lbl">LIAP creative income YTD</td><td class="val">$1,050</td></tr>
+      <tr><td class="lbl">Oil & Gas royalties YTD</td><td class="val">$289</td></tr>
+      <tr><td class="lbl">Stock income YTD</td><td class="val">$712</td></tr>
+      <tr><td class="lbl">2025 outstanding tax balance</td><td class="val dn">$1,289 ⚠ pay now</td></tr>
+      <tr class="total"><td class="lbl">Total tax obligations</td><td class="val amber">$1,904</td></tr>
     </table>
-    <div class="flag a" style="margin-top:12px;margin-bottom:0">
-      <div class="flag-title">2025 tax balance of $1,289 still outstanding</div>
-      <div class="flag-body">This should be your first financial priority after the Apple Card. Clear this before Q2 estimated tax deadline to avoid penalties.</div>
+    <div class="flag r" style="margin-top:12px;margin-bottom:0">
+      <div class="flag-title">$1,289 sitting in PNC Long Term earmarked — pay it today</div>
+      <div class="flag-body">The money is there. The deadline is June 15. IRS penalties compound daily. This is the #1 priority action on the entire dashboard. Transfer and pay now.</div>
     </div>
   </div>
+
+  <!-- SHOPPING -->
+  <div class="section-title" style="margin-top:4px">Shopping — PNC Long Term ($300 seeded)</div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-label">Shopping bucket · lowest priority · piece by piece</div>
+    <div class="card-value accent">$300</div>
+    <div class="card-sub">Seeded in PNC Long Term · grows from LIAP income · no timeline pressure</div>
+    <div class="divider"></div>
+    <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:8px;letter-spacing:1px">PURCHASE PRIORITY ORDER</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px">
+      <div style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;min-width:18px">1</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">LIAP camera gear</div><div style="font-size:12px;color:var(--text2)">100% deductible · income-generating · buy in high-revenue years</div></div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px">
+      <div style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:12px;min-width:18px">2</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Personal technology</div><div style="font-size:12px;color:var(--text2)">Save per item until fully funded · iPad Pro first at $1,999</div></div>
+    </div>
+    <div style="padding:8px 0;display:flex;gap:10px">
+      <div style="color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px;min-width:18px">3</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Golf equipment</div><div style="font-size:12px;color:var(--text2)">Lowest urgency · $750 total · when surplus allows</div></div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:'JetBrains Mono',monospace;margin:4px 0 8px 2px">LIAP Camera Gear — 100% Deductible <span class="tag tag-liap">LIAP</span></div>
+  <div class="card" style="margin-bottom:12px">
+    <table class="data-table">
+      <tr><td class="lbl">ATOMOS Ninja Ultra recorder</td><td class="val">~$700</td></tr>
+      <tr><td class="lbl">GF 80mm f/1.7 R WR (world's fastest MF AF lens)</td><td class="val">$2,299</td></tr>
+      <tr><td class="lbl">GF 100-200mm f/5.6 R LM OIS WR</td><td class="val">$2,299</td></tr>
+      <tr><td class="lbl">GF 20-35mm f/4 R WR (widest GF zoom)</td><td class="val">$2,499</td></tr>
+      <tr><td class="lbl">Cinema Lens Kit — GF Mount</td><td class="val">$6,000</td></tr>
+      <tr><td class="lbl">Tripod (travel style)</td><td class="val">$750</td></tr>
+      <tr class="total"><td class="lbl">Sticker total</td><td class="val" style="color:var(--purple)">$14,547</td></tr>
+      <tr class="total"><td class="lbl">After 30% tax deduction (effective cost)</td><td class="val up">~$10,183</td></tr>
+    </table>
+  </div>
+
+  <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:'JetBrains Mono',monospace;margin:4px 0 8px 2px">Personal Technology</div>
+  <div class="card" style="margin-bottom:12px">
+    <table class="data-table">
+      <tr><td class="lbl">iPad Pro 13" nano-texture 1TB Wi-Fi</td><td class="val">$1,999</td></tr>
+      <tr><td class="lbl">iPhone 17 Pro</td><td class="val">$1,099</td></tr>
+      <tr><td class="lbl">Apple Watch Ultra 3</td><td class="val">$799</td></tr>
+      <tr><td class="lbl">AirPods Max 2 <span style="font-size:10px;color:var(--accent);font-family:'JetBrains Mono',monospace">(released Apr 2026)</span></td><td class="val">$549</td></tr>
+      <tr><td class="lbl">Vision Pro accessories</td><td class="val">$300</td></tr>
+      <tr class="total"><td class="lbl">Personal tech total</td><td class="val">$4,746</td></tr>
+    </table>
+  </div>
+
+  <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:'JetBrains Mono',monospace;margin:4px 0 8px 2px">Golf Equipment</div>
+  <div class="card" style="margin-bottom:0">
+    <table class="data-table">
+      <tr><td class="lbl">5 Wood</td><td class="val">$250</td></tr>
+      <tr><td class="lbl">60 Degree Wedge</td><td class="val">$250</td></tr>
+      <tr><td class="lbl">Putter</td><td class="val">$250</td></tr>
+      <tr class="total"><td class="lbl">Golf total</td><td class="val">$750</td></tr>
+    </table>
+  </div>
+
 </section>
 
 <!-- ══════════════════════════════════════════
