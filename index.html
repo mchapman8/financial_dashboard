@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080d0d">
+<title>Financial Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --accent: #00C9A7;
+  --accent2: #00a88c;
+  --accent-dim: rgba(0,201,167,0.12);
+  --accent-glow: rgba(0,201,167,0.25);
+  --bg: #080d0d;
+  --bg2: #0e1515;
+  --bg3: #141e1e;
+  --bg4: #1a2626;
+  --border: rgba(0,201,167,0.1);
+  --border2: rgba(0,201,167,0.2);
+  --text: #e2eeec;
+  --text2: #7a9e99;
+  --text3: #3d5c58;
+  --red: #ff4d6d;
+  --red-dim: rgba(255,77,109,0.12);
+  --amber: #ffb547;
+  --amber-dim: rgba(255,181,71,0.12);
+  --blue: #4d9fff;
+  --blue-dim: rgba(77,159,255,0.12);
+  --purple: #a78bfa;
+  --nav-h: 68px;
+  --header-h: 80px;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: calc(var(--nav-h) + 20px);
+}
+
+/* ── HEADER ── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8,13,13,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+.last-updated {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+.nw-pill {
+  background: var(--accent-dim);
+  border: 1px solid var(--border2);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: var(--nav-h);
+  background: rgba(8,13,13,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  cursor: pointer;
+  flex: 1;
+  border: none;
+  background: none;
+  color: var(--text3);
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.nav-item.active { color: var(--accent); }
+.nav-icon { font-size: 20px; line-height: 1; }
+.nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+
+/* ── SECTIONS ── */
+.section {
+  display: none;
+  padding: 20px 16px;
+  animation: fadeIn 0.3s ease;
+}
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+}
+.card-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 6px;
+}
+.card-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+.card-value.accent { color: var(--accent); }
+.card-value.red { color: var(--red); }
+.card-value.amber { color: var(--amber); }
+.card-sub {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.card-sub.up { color: var(--accent); }
+.card-sub.dn { color: var(--red); }
+.card-sub.warn { color: var(--amber); }
+
+/* ── CHANGE ROW ── */
+.change-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.change-item { text-align: center; }
+.change-period {
+  font-size: 9px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+.change-val {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+.change-val.up { color: var(--accent); }
+.change-val.dn { color: var(--red); }
+
+/* ── 2-COL GRID ── */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+
+/* ── MINI CARD ── */
+.mini-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 12px;
+}
+.mini-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 5px;
+}
+.mini-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.mini-value.accent { color: var(--accent); }
+.mini-value.red { color: var(--red); }
+.mini-value.amber { color: var(--amber); }
+.mini-sub {
+  font-size: 10px;
+  color: var(--text2);
+  margin-top: 3px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.mini-sub.up { color: var(--accent); }
+.mini-sub.dn { color: var(--red); }
+.mini-sub.warn { color: var(--amber); }
+
+/* ── CHARTS ── */
+.chart-wrap { position: relative; width: 100%; }
+.chart-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 12px;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text2);
+  font-family: 'JetBrains Mono', monospace;
+}
+.ld { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── FLAGS / SIGNALS ── */
+.flag {
+  border-left: 3px solid;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.flag.g { border-color: var(--accent); background: var(--accent-dim); }
+.flag.a { border-color: var(--amber); background: var(--amber-dim); }
+.flag.r { border-color: var(--red); background: var(--red-dim); }
+.flag.b { border-color: var(--blue); background: var(--blue-dim); }
+.flag.p { border-color: var(--purple); background: rgba(167,139,250,0.1); }
+.flag-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.flag-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+/* ── PROGRESS BARS ── */
+.progress-wrap { margin-bottom: 14px; }
+.progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.progress-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.progress-pct { font-size: 11px; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.progress-bg { height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 6px; border-radius: 3px; background: var(--accent); transition: width 0.8s ease; }
+.progress-fill.full { background: var(--accent); }
+.progress-fill.warn { background: var(--amber); }
+.progress-fill.low { background: var(--red); }
+.progress-sub { font-size: 11px; color: var(--text2); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+/* ── TABLES ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table td { padding: 9px 6px; border-bottom: 1px solid var(--border); }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .lbl { color: var(--text2); }
+.data-table .val { text-align: right; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.data-table .val.up { color: var(--accent); }
+.data-table .val.dn { color: var(--red); }
+.data-table .val.warn { color: var(--amber); }
+.data-table .total td { border-top: 1px solid var(--border2); font-weight: 700; color: var(--text); padding-top: 12px; }
+
+/* ── ACTION ITEMS ── */
+.action-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+}
+.action-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: 1px solid var(--border2);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+.action-body {}
+.action-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.action-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: 6px;
+}
+.tag-liap { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+.tag-personal { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border2); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ── SCENARIO CARDS ── */
+.scenario-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+.scenario-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 12px 10px; text-align: center; }
+.scenario-label { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+.scenario-val { font-size: 16px; font-weight: 700; color: var(--text); }
+.scenario-val.accent { color: var(--accent); }
+.scenario-sub { font-size: 10px; color: var(--text2); margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
+
+/* ── INCOME STREAM ROW ── */
+.stream-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.stream-row:last-child { border-bottom: none; }
+.stream-left { display: flex; align-items: center; gap: 10px; }
+.stream-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.stream-name { font-size: 13px; color: var(--text); }
+.stream-right { text-align: right; }
+.stream-amt { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+.stream-ytd { font-size: 10px; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
+
+/* ── MORTGAGE SCENARIOS ── */
+.mort-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.mort-row:last-child { border-bottom: none; }
+.mort-label { font-size: 13px; color: var(--text2); }
+.mort-vals { text-align: right; }
+.mort-date { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+.mort-save { font-size: 11px; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+
+/* ── GOAL AFFORDABILITY ── */
+.afford-card { background: var(--bg3); border: 1px solid var(--border2); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+.afford-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.afford-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.afford-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 10px; background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border2); font-family: 'JetBrains Mono', monospace; }
+.afford-amount { font-size: 32px; font-weight: 800; color: var(--accent); letter-spacing: -1px; margin-bottom: 4px; }
+.afford-sub { font-size: 12px; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; }
+.afford-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+.afford-row:last-child { border-bottom: none; }
+.afford-lbl { color: var(--text2); }
+.afford-val { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+
+/* ── CASH FLOW CALENDAR ── */
+.cal-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.cal-item:last-child { border-bottom: none; }
+.cal-date { font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--text3); min-width: 50px; }
+.cal-desc { font-size: 13px; color: var(--text); flex: 1; }
+.cal-amt { font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.cal-amt.in { color: var(--accent); }
+.cal-amt.out { color: var(--red); }
+
+/* ── MILESTONE ── */
+.milestone { background: var(--accent-dim); border: 1px solid var(--border2); border-radius: 14px; padding: 16px; margin-bottom: 12px; text-align: center; }
+.milestone-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+.milestone-value { font-size: 36px; font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+.milestone-sub { font-size: 12px; color: var(--text2); margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+
+/* ── COACH HEADER ── */
+.coach-header { background: linear-gradient(135deg, var(--bg3), var(--bg2)); border: 1px solid var(--border2); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+.coach-greeting { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+.coach-assessment { font-size: 14px; color: var(--text); line-height: 1.7; }
+
+/* ── WEEK BREAKDOWN ── */
+.week-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.week-item:last-child { border-bottom: none; }
+.week-desc { color: var(--text2); }
+.week-val { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.week-val.up { color: var(--accent); }
+.week-val.dn { color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- ── APP HEADER ── -->
+<div class="app-header">
+  <div>
+    <div class="app-title">LIAP · Finance</div>
+    <div class="last-updated">Updated: Apr 12, 2026</div>
+  </div>
+  <div class="nw-pill">$324,733</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — VITAL SIGNS
+══════════════════════════════════════════ -->
+<section class="section active" id="s-vitals">
+  <div class="section-title">Vital Signs</div>
+
+  <!-- Net Worth Hero -->
+  <div class="card">
+    <div class="card-label">Net Worth</div>
+    <div class="card-value accent">$324,733</div>
+    <div class="card-sub">Liquid $124,408 · Assets $297,976 · Debt $97,651</div>
+    <div class="change-row">
+      <div class="change-item">
+        <div class="change-period">1 WK</div>
+        <div class="change-val dn">−$311</div>
+      </div>
+      <div class="change-item">
+        <div class="change-period">MTD</div>
+        <div class="change-val dn">−$7,270</div>
+      </div>
+      <div class="change-item">
+        <div class="change-period">YTD</div>
+        <div class="change-val up">+$2,756</div>
+      </div>
+      <div class="change-item">
+        <div class="change-period">1 YR</div>
+        <div class="change-val up">+$59,350</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key metrics grid -->
+  <div class="grid2">
+    <div class="mini-card">
+      <div class="mini-label">Total Liquid</div>
+      <div class="mini-value accent">$124,408</div>
+      <div class="mini-sub">All accessible accounts</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-label">Total Debt</div>
+      <div class="mini-value amber">$97,651</div>
+      <div class="mini-sub up">↓ $1,624 YTD</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="mini-card">
+      <div class="mini-label">Monthly Burn</div>
+      <div class="mini-value">$5,618</div>
+      <div class="mini-sub">3-month rolling avg</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-label">Savings Rate</div>
+      <div class="mini-value accent">34%</div>
+      <div class="mini-sub">of total income saved</div>
+    </div>
+  </div>
+
+  <!-- Days covered — hero stat -->
+  <div class="card">
+    <div class="card-label">Financial Runway</div>
+    <div class="card-value accent">662 days</div>
+    <div class="card-sub">Liquid ÷ daily burn rate · 1 year 10 months of coverage</div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <div class="progress-header">
+        <span class="progress-label" style="font-size:11px;color:var(--text2)">9-month emergency target</span>
+        <span class="progress-pct">662 / 270 days</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill full" style="width:100%"></div></div>
+      <div class="progress-sub">✓ Fully funded — 2.4× above 9-month target</div>
+    </div>
+  </div>
+
+  <!-- Credit & Rewards -->
+  <div class="section-title" style="margin-top:20px">Credit & Rewards</div>
+  <div class="grid2">
+    <div class="mini-card">
+      <div class="mini-label">Chase Score</div>
+      <div class="mini-value accent">828</div>
+      <div class="mini-sub up">All-time high</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-label">AMEX Score</div>
+      <div class="mini-value accent">839</div>
+      <div class="mini-sub up">All-time high</div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="mini-card">
+      <div class="mini-label">Chase Points</div>
+      <div class="mini-value">28,770</div>
+      <div class="mini-sub up">↑ 4,789 since Jan 1</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-label">AMEX SkyMiles</div>
+      <div class="mini-value">279,601</div>
+      <div class="mini-sub up">↑ 12,466 since Jan 1</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — SPENDING
+══════════════════════════════════════════ -->
+<section class="section" id="s-spending">
+  <div class="section-title">Spending</div>
+
+  <!-- Fixed vs Variable -->
+  <div class="card">
+    <div class="chart-title">Fixed vs Variable — April (partial)</div>
+    <div class="grid2" style="margin-bottom:0">
+      <div style="text-align:center;padding:12px 0">
+        <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px">FIXED FLOOR</div>
+        <div style="font-size:24px;font-weight:800;color:var(--text)">$1,405</div>
+        <div style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace">mortgage + subs</div>
+      </div>
+      <div style="text-align:center;padding:12px 0">
+        <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px">VARIABLE</div>
+        <div style="font-size:24px;font-weight:800;color:var(--amber)">$1,000</div>
+        <div style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace">discretionary so far</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category breakdown -->
+  <div class="card">
+    <div class="chart-title">Spending by Category — 3-month avg</div>
+    <div class="legend">
+      <span><span class="ld" style="background:#00C9A7"></span>This month</span>
+      <span><span class="ld" style="background:#3d5c58"></span>3M avg</span>
+    </div>
+    <div class="chart-wrap" style="height:280px"><canvas id="spendCatChart"></canvas></div>
+  </div>
+
+  <!-- Biggest movers -->
+  <div class="section-title" style="margin-top:4px">Biggest Movers This Week</div>
+  <div class="flag a">
+    <div class="flag-title">Card payments — $1,405 out Apr 7</div>
+    <div class="flag-body">AMEX $930 + Chase $475 paid. Net card debt reduced by $223. Within normal monthly range.</div>
+  </div>
+  <div class="flag g">
+    <div class="flag-title">Apple paycheck — $1,618 in Apr 10</div>
+    <div class="flag-body">Regular bi-weekly paycheck landed. PNC Checking recovered from $1,705 → $1,918 after mortgage and card payments.</div>
+  </div>
+  <div class="flag a">
+    <div class="flag-title">Apple Cash thin — dropped to $139</div>
+    <div class="flag-body">Down $750 from Apr 2. John Marshall LIAP subcontractor payment ($750) came from this account. <span class="tag tag-liap">LIAP</span></div>
+  </div>
+
+  <!-- Subscription audit -->
+  <div class="section-title" style="margin-top:4px">Monthly Subscriptions</div>
+  <div class="card">
+    <table class="data-table">
+      <tr><td class="lbl">Adobe CC <span class="tag tag-liap">LIAP</span></td><td class="val">$74.19/mo</td></tr>
+      <tr><td class="lbl">Comcast (50% personal)</td><td class="val">$46.50/mo</td></tr>
+      <tr><td class="lbl">Verizon (50% personal)</td><td class="val">~$28.00/mo</td></tr>
+      <tr><td class="lbl">CareOne <span class="tag tag-liap">LIAP</span></td><td class="val">~$27.00/mo</td></tr>
+      <tr><td class="lbl">Planet Fitness</td><td class="val">$10.00/mo</td></tr>
+      <tr class="total"><td class="lbl">Total subscriptions</td><td class="val">~$185/mo</td></tr>
+      <tr class="total"><td class="lbl">Personal only</td><td class="val accent">~$84/mo</td></tr>
+    </table>
+  </div>
+
+  <!-- Food callout -->
+  <div class="section-title" style="margin-top:4px">Food & Dining Watch</div>
+  <div class="card">
+    <div class="chart-title">Food + Groceries — monthly trend</div>
+    <div class="chart-wrap" style="height:180px"><canvas id="foodChart"></canvas></div>
+    <div class="divider"></div>
+    <div class="grid2" style="margin-bottom:0">
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">3M AVG</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text)">$687</div>
+        <div style="font-size:10px;color:var(--text2);font-family:'JetBrains Mono',monospace">food + groceries</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">% OF INCOME</div>
+        <div style="font-size:20px;font-weight:700;color:var(--accent)">10.4%</div>
+        <div style="font-size:10px;color:var(--text2);font-family:'JetBrains Mono',monospace">healthy range</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Needs input -->
+  <div class="section-title" style="margin-top:4px">Needs Your Input</div>
+  <div class="flag b">
+    <div class="flag-title">No ambiguous transactions this week</div>
+    <div class="flag-body">All April 1–12 transactions are clearly categorized. Next paycheck expected ~Apr 24.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — INCOME
+══════════════════════════════════════════ -->
+<section class="section" id="s-income">
+  <div class="section-title">Income Streams</div>
+
+  <!-- YTD summary -->
+  <div class="card">
+    <div class="card-label">Total Income YTD 2026</div>
+    <div class="card-value accent">$24,266</div>
+    <div class="card-sub">Through April 12 · On pace for ~$72K full year</div>
+  </div>
+
+  <!-- Stream breakdown -->
+  <div class="card">
+    <div class="chart-title">Income by Stream — 2026 YTD</div>
+    <div class="stream-row">
+      <div class="stream-left"><div class="stream-dot" style="background:#4d9fff"></div><div class="stream-name">Apple Employment</div></div>
+      <div class="stream-right"><div class="stream-amt">$21,215</div><div class="stream-ytd">YTD · pace $51K/yr</div></div>
+    </div>
+    <div class="stream-row">
+      <div class="stream-left"><div class="stream-dot" style="background:#00C9A7"></div><div class="stream-name">LIAP Creative</div></div>
+      <div class="stream-right"><div class="stream-amt">$1,050</div><div class="stream-ytd">CLCED_006 · Mar 16</div></div>
+    </div>
+    <div class="stream-row">
+      <div class="stream-left"><div class="stream-dot" style="background:#a78bfa"></div><div class="stream-name">Stock Portfolio</div></div>
+      <div class="stream-right"><div class="stream-amt">$712</div><div class="stream-ytd">Dividends + sales</div></div>
+    </div>
+    <div class="stream-row">
+      <div class="stream-left"><div class="stream-dot" style="background:#ffb547"></div><div class="stream-name">Oil & Gas Royalties</div></div>
+      <div class="stream-right"><div class="stream-amt">$289</div><div class="stream-ytd">Monthly payments</div></div>
+    </div>
+    <div class="stream-row">
+      <div class="stream-left"><div class="stream-dot" style="background:#3d5c58"></div><div class="stream-name">Cashback + Interest</div></div>
+      <div class="stream-right"><div class="stream-amt">~$350</div><div class="stream-ytd">Rewards + savings int.</div></div>
+    </div>
+  </div>
+
+  <!-- Income donut -->
+  <div class="card">
+    <div class="chart-title">2025 Full Year vs 2026 YTD Composition</div>
+    <div class="legend">
+      <span><span class="ld" style="background:#4d9fff"></span>Apple</span>
+      <span><span class="ld" style="background:#00C9A7"></span>LIAP</span>
+      <span><span class="ld" style="background:#a78bfa"></span>Stock</span>
+      <span><span class="ld" style="background:#ffb547"></span>Oil & Gas</span>
+    </div>
+    <div class="chart-wrap" style="height:200px"><canvas id="incomeDonut"></canvas></div>
+  </div>
+
+  <!-- LIAP realized this month -->
+  <div class="section-title" style="margin-top:4px">LIAP — Realized Income April</div>
+  <div class="card">
+    <div style="text-align:center;padding:8px 0">
+      <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px">REALIZED THIS MONTH</div>
+      <div style="font-size:28px;font-weight:800;color:var(--text)">$0</div>
+      <div style="font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-top:4px">CW010 invoiced — awaiting payment</div>
+    </div>
+    <div class="divider"></div>
+    <div class="flag p">
+      <div class="flag-title">CW010 — Carson Wealth — Pending</div>
+      <div class="flag-body">Invoice sent. John Marshall subcontractor cost $750 already paid Apr 7 from Apple Cash. Net income when received: TBD gross minus $750 cost.</div>
+    </div>
+  </div>
+
+  <!-- 30-day cash flow calendar -->
+  <div class="section-title" style="margin-top:4px">30-Day Cash Flow Forecast</div>
+  <div class="card">
+    <div class="cal-item">
+      <div class="cal-date">APR 14</div>
+      <div class="cal-desc">Oil & Gas monthly payment</div>
+      <div class="cal-amt in">+~$100</div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date">APR 24</div>
+      <div class="cal-desc">Apple paycheck</div>
+      <div class="cal-amt in">+~$1,618</div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date">APR 30</div>
+      <div class="cal-desc">Stock dividends (monthly)</div>
+      <div class="cal-amt in">+~$60</div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date">MAY 1</div>
+      <div class="cal-desc">Mortgage payment</div>
+      <div class="cal-amt out">−$1,000</div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date">TBD APR</div>
+      <div class="cal-desc">CW010 — Carson Wealth payment</div>
+      <div class="cal-amt in">+TBD</div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date">MAY 8</div>
+      <div class="cal-desc">Apple paycheck</div>
+      <div class="cal-amt in">+~$1,618</div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date">JUNE</div>
+      <div class="cal-desc">Audia Cup 2026 — CONFIRMED</div>
+      <div class="cal-amt in">+$4,900–7,400</div>
+    </div>
+  </div>
+
+  <!-- Income pace -->
+  <div class="section-title" style="margin-top:4px">LIAP Pace vs Prior Years</div>
+  <div class="card">
+    <div class="chart-wrap" style="height:200px"><canvas id="liapPaceChart"></canvas></div>
+    <div class="divider"></div>
+    <div class="flag a">
+      <div class="flag-title">2026 YTD LIAP at $1,050 — behind historical pace</div>
+      <div class="flag-body">At this point in 2023 LIAP had $3,500. In 2024 it had $2,000. Audia Cup in June will close most of the gap. Carson Wealth CW010 pending. Pipeline needs to accelerate in Q2.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — GOALS
+══════════════════════════════════════════ -->
+<section class="section" id="s-goals">
+  <div class="section-title">Savings Goals</div>
+
+  <!-- Emergency Fund -->
+  <div class="section-title" style="margin-top:0">Emergency Fund — 9 Months</div>
+  <div class="card">
+    <div class="card-label">9-Month Target (3M avg burn × 9)</div>
+    <div class="card-value accent">$50,562</div>
+    <div class="card-sub">Target based on $5,618/mo average burn</div>
+    <div style="margin-top:14px">
+      <div class="progress-header">
+        <span class="progress-label">Current liquid: $124,408</span>
+        <span class="progress-pct">246% funded</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill full" style="width:100%"></div></div>
+      <div class="progress-sub">✓ $73,846 above target — surplus available for other goals</div>
+    </div>
+  </div>
+
+  <!-- Home Purchase -->
+  <div class="section-title" style="margin-top:4px">Home Purchase — Affordability</div>
+  <div class="afford-card">
+    <div class="afford-header">
+      <div class="afford-title">What You Can Afford Now</div>
+      <div class="afford-badge">20% DOWN</div>
+    </div>
+    <div class="afford-amount">$205,000</div>
+    <div class="afford-sub">Based on current savings + Regent St equity</div>
+    <div class="afford-row"><div class="afford-lbl">Regent Street equity</div><div class="afford-val">~$41,000</div></div>
+    <div class="afford-row"><div class="afford-lbl">Liquid available for DP</div><div class="afford-val">~$0 additional</div></div>
+    <div class="afford-row"><div class="afford-lbl">Total down payment capacity</div><div class="afford-val">~$41,000</div></div>
+    <div class="afford-row"><div class="afford-lbl">20% of = affordable home</div><div class="afford-val">~$205,000</div></div>
+    <div class="afford-row"><div class="afford-lbl">Status</div><div class="afford-val" style="color:var(--amber)">Tied to relocation</div></div>
+    <div class="divider"></div>
+    <div class="flag b" style="margin-bottom:0">
+      <div class="flag-title">Scenario A — Stay in Pittsburgh</div>
+      <div class="flag-body">$205K home affordable now. Every additional $1K saved = $5K more home. Build liquid and watch this number grow weekly.</div>
+    </div>
+  </div>
+
+  <!-- Car Fund -->
+  <div class="section-title" style="margin-top:4px">New Car — Affordability</div>
+  <div class="afford-card">
+    <div class="afford-header">
+      <div class="afford-title">What You Can Finance at $500/mo</div>
+      <div class="afford-badge">TARGET $50K</div>
+    </div>
+    <div class="afford-amount">$30,150</div>
+    <div class="afford-sub">Current total vehicle budget</div>
+    <div class="afford-row"><div class="afford-lbl">Car fund saved</div><div class="afford-val">$0</div></div>
+    <div class="afford-row"><div class="afford-lbl">Mazda trade-in est.</div><div class="afford-val">$4,650</div></div>
+    <div class="afford-row"><div class="afford-lbl">Financed at $500/mo (60mo, 6.5%)</div><div class="afford-val">$25,500</div></div>
+    <div class="afford-row"><div class="afford-lbl">Total budget now</div><div class="afford-val" style="color:var(--amber)">$30,150</div></div>
+    <div class="afford-row"><div class="afford-lbl">Gap to $50K target</div><div class="afford-val" style="color:var(--red)">−$19,850</div></div>
+    <div class="divider"></div>
+    <div class="progress-header">
+      <span class="progress-label" style="font-size:12px">Progress to $50K vehicle</span>
+      <span class="progress-pct">60%</span>
+    </div>
+    <div class="progress-bg"><div class="progress-fill warn" style="width:60%"></div></div>
+    <div class="progress-sub">Every $1K added to car fund = $1K more vehicle budget</div>
+  </div>
+
+  <!-- Travel Fund -->
+  <div class="section-title" style="margin-top:4px">Travel Fund</div>
+  <div class="card">
+    <div class="card-label">Current Balance</div>
+    <div class="card-value accent">$284</div>
+    <div class="card-sub">Contribute when surplus available</div>
+    <div class="divider"></div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">Add a trip to check affordability:</div>
+    <div class="flag b">
+      <div class="flag-title">Trip calculator — tell me a destination</div>
+      <div class="flag-body">Each week when you update the file, add a note with your trip destination and estimated budget. I'll calculate if you can afford it now or when you'll have enough based on your contribution pace.</div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace">AMEX SkyMiles: 279,601 · Chase pts: 28,770<br>Est. flight value: $2,800–$4,200 (not counted in fund)</div>
+  </div>
+
+  <!-- LIAP Tax Reserve -->
+  <div class="section-title" style="margin-top:4px">LIAP Tax Reserve — 30%</div>
+  <div class="card">
+    <div class="grid2" style="margin-bottom:14px">
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">NON-APPLE INCOME YTD</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text)">$2,051</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">30% RESERVE NEEDED</div>
+        <div style="font-size:22px;font-weight:700;color:var(--amber)">$615</div>
+      </div>
+    </div>
+    <table class="data-table">
+      <tr><td class="lbl">LIAP creative income</td><td class="val">$1,050</td></tr>
+      <tr><td class="lbl">Oil & Gas royalties</td><td class="val">$289</td></tr>
+      <tr><td class="lbl">Stock income</td><td class="val">$712</td></tr>
+      <tr><td class="lbl">2025 tax balance still owed</td><td class="val warn">$1,289</td></tr>
+      <tr class="total"><td class="lbl">Total reserve needed</td><td class="val amber">$1,904</td></tr>
+    </table>
+    <div class="flag a" style="margin-top:12px;margin-bottom:0">
+      <div class="flag-title">2025 tax balance of $1,289 still outstanding</div>
+      <div class="flag-body">This should be your first financial priority after the Apple Card. Clear this before Q2 estimated tax deadline to avoid penalties.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — DEBT
+══════════════════════════════════════════ -->
+<section class="section" id="s-debt">
+  <div class="section-title">Debt</div>
+
+  <!-- Debt to asset ratio -->
+  <div class="card">
+    <div class="card-label">Debt-to-Asset Ratio</div>
+    <div class="card-value accent">23.1%</div>
+    <div class="card-sub">Total debt ÷ total assets · Excellent — under 30%</div>
+    <div style="margin-top:14px">
+      <div class="progress-bg"><div class="progress-fill" style="width:23.1%;background:var(--accent)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:4px">
+        <span>0%</span><span>30% threshold</span><span>100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mortgage hero -->
+  <div class="section-title" style="margin-top:4px">Mortgage</div>
+  <div class="card">
+    <div class="card-label">NewRez · 3.5% Fixed · Originated ~Sep 2016</div>
+    <div class="card-value">$91,973</div>
+    <div class="card-sub warn">Matures September 1, 2046 · 20 years remaining</div>
+    <div class="divider"></div>
+    <table class="data-table">
+      <tr><td class="lbl">Original loan amount</td><td class="val">$128,071</td></tr>
+      <tr><td class="lbl">Total paid down</td><td class="val up">$36,098</td></tr>
+      <tr><td class="lbl">Monthly payment</td><td class="val">$1,000</td></tr>
+      <tr><td class="lbl">Est. principal this month</td><td class="val up">~$731</td></tr>
+      <tr><td class="lbl">Est. interest this month</td><td class="val warn">~$269</td></tr>
+      <tr><td class="lbl">Home value (est.)</td><td class="val">$128,071</td></tr>
+      <tr><td class="lbl">Current equity</td><td class="val up">$36,098</td></tr>
+    </table>
+  </div>
+
+  <!-- Payoff acceleration -->
+  <div class="section-title" style="margin-top:4px">Payoff Acceleration Scenarios</div>
+  <div class="card">
+    <div class="mort-row">
+      <div class="mort-label">$1,000/mo (current)</div>
+      <div class="mort-vals"><div class="mort-date">Sep 2046</div><div class="mort-save">baseline</div></div>
+    </div>
+    <div class="mort-row">
+      <div class="mort-label">$1,100/mo (+$100)</div>
+      <div class="mort-vals"><div class="mort-date">~Jun 2044</div><div class="mort-save accent">saves ~$4,200</div></div>
+    </div>
+    <div class="mort-row">
+      <div class="mort-label">$1,250/mo (+$250)</div>
+      <div class="mort-vals"><div class="mort-date">~Feb 2042</div><div class="mort-save accent">saves ~$8,900</div></div>
+    </div>
+    <div class="mort-row">
+      <div class="mort-label">$1,500/mo (+$500)</div>
+      <div class="mort-vals"><div class="mort-date">~Oct 2038</div><div class="mort-save accent">saves ~$15,400</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="flag b" style="margin-bottom:0">
+      <div class="flag-title">3.5% is cheap debt — invest the difference</div>
+      <div class="flag-body">At 3.5%, your mortgage costs less than historical stock market returns (~7–10%). Extra payments save guaranteed 3.5% but investing that same money has historically earned more. Worth weighing before accelerating payoff.</div>
+    </div>
+  </div>
+
+  <!-- Credit cards -->
+  <div class="section-title" style="margin-top:4px">Credit Cards</div>
+  <div class="card">
+    <table class="data-table">
+      <tr>
+        <td class="lbl">Apple Card</td>
+        <td class="val warn">$2,923</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3)">19.5% utilization · $15K limit</td>
+        <td class="val" style="font-size:11px">
+          <div class="progress-bg" style="width:80px;margin-left:auto"><div class="progress-fill warn" style="width:19.5%"></div></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl">Delta AMEX</td>
+        <td class="val">$1,832</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3)">7.0% utilization · $26.1K limit</td>
+        <td class="val" style="font-size:11px">
+          <div class="progress-bg" style="width:80px;margin-left:auto"><div class="progress-fill" style="width:7%"></div></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl">Chase Freedom</td>
+        <td class="val up">$909</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3)">7.6% utilization · $12K limit</td>
+        <td class="val" style="font-size:11px">
+          <div class="progress-bg" style="width:80px;margin-left:auto"><div class="progress-fill" style="width:7.6%"></div></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl">ACME Visa</td>
+        <td class="val up">$14</td>
+      </tr>
+      <tr>
+        <td class="lbl" style="font-size:11px;color:var(--text3)">0.19% utilization · $7.5K limit</td>
+        <td class="val" style="font-size:11px">
+          <div class="progress-bg" style="width:80px;margin-left:auto"><div class="progress-fill" style="width:0.19%"></div></div>
+        </td>
+      </tr>
+      <tr class="total"><td class="lbl">Total card balance</td><td class="val warn">$5,678</td></tr>
+      <tr class="total"><td class="lbl">Combined utilization</td><td class="val up">9.5%</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — HISTORY
+══════════════════════════════════════════ -->
+<section class="section" id="s-history">
+  <div class="section-title">History & Trajectory</div>
+
+  <!-- $400K milestone -->
+  <div class="milestone">
+    <div class="milestone-label">Next Milestone</div>
+    <div class="milestone-value">$400K</div>
+    <div class="milestone-sub">$75,267 away · Est. ~mid 2028 at current pace<br>Audia Cup + LIAP pipeline will accelerate this</div>
+  </div>
+
+  <!-- Decade chart -->
+  <div class="card">
+    <div class="chart-title">Net Worth — Full Decade (2016–2026)</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="decadeChart"></canvas></div>
+    <div class="divider"></div>
+    <div style="font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.8">
+      2019 → LIAP launched<br>
+      2023 → Student loans paid off<br>
+      2024 → LIAP peak $21.5K<br>
+      2026 Jan → IRA added to tracking
+    </div>
+  </div>
+
+  <!-- Detailed 2024-present -->
+  <div class="card">
+    <div class="chart-title">Net Worth — Monthly Detail (2024–2026)</div>
+    <div class="legend">
+      <span><span class="ld" style="background:#00C9A7"></span>Net worth</span>
+      <span><span class="ld" style="background:#4d9fff;opacity:0.6"></span>Liquid</span>
+    </div>
+    <div class="chart-wrap" style="height:220px"><canvas id="detailChart"></canvas></div>
+  </div>
+
+  <!-- Net worth composition -->
+  <div class="card">
+    <div class="chart-title">Net Worth Composition — April 2026</div>
+    <div class="legend">
+      <span><span class="ld" style="background:#00C9A7"></span>Liquid</span>
+      <span><span class="ld" style="background:#4d9fff"></span>Retirement</span>
+      <span><span class="ld" style="background:#a78bfa"></span>Home equity</span>
+      <span><span class="ld" style="background:#ffb547"></span>Other assets</span>
+    </div>
+    <div class="chart-wrap" style="height:200px"><canvas id="compChart"></canvas></div>
+  </div>
+
+  <!-- Forward projections -->
+  <div class="section-title" style="margin-top:4px">5-Year Projections (2026–2031)</div>
+  <div class="card">
+    <div class="legend">
+      <span><span class="ld" style="background:#3d5c58"></span>Conservative</span>
+      <span><span class="ld" style="background:#00C9A7"></span>Base case</span>
+      <span><span class="ld" style="background:#4d9fff"></span>Growth</span>
+    </div>
+    <div class="chart-wrap" style="height:220px"><canvas id="projChart"></canvas></div>
+    <div class="divider"></div>
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <div class="scenario-label">Conservative</div>
+        <div class="scenario-val">$445K</div>
+        <div class="scenario-sub">by 2031</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-label">Base</div>
+        <div class="scenario-val accent">$530K</div>
+        <div class="scenario-sub">by 2031</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-label">Growth</div>
+        <div class="scenario-val" style="color:var(--blue)">$640K</div>
+        <div class="scenario-sub">by 2031</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly change breakdown -->
+  <div class="section-title" style="margin-top:4px">This Week's Net Worth Movement</div>
+  <div class="card">
+    <div class="week-item"><div class="week-desc">Apple paycheck (Apr 10)</div><div class="week-val up">+$1,618</div></div>
+    <div class="week-item"><div class="week-desc">Mortgage payment (Apr 1)</div><div class="week-val dn">−$1,000</div></div>
+    <div class="week-item"><div class="week-desc">AMEX card payment</div><div class="week-val up">−$930 (debt ↓)</div></div>
+    <div class="week-item"><div class="week-desc">Chase card payment</div><div class="week-val up">−$475 (debt ↓)</div></div>
+    <div class="week-item"><div class="week-desc">John Marshall — LIAP (Apple Cash)</div><div class="week-val dn">−$750</div></div>
+    <div class="week-item"><div class="week-desc">Market movement (stocks)</div><div class="week-val dn">~−$0</div></div>
+    <div class="week-item" style="border-top:1px solid var(--border2);padding-top:12px;margin-top:4px">
+      <div class="week-desc" style="font-weight:700;color:var(--text)">Net change</div>
+      <div class="week-val dn" style="font-size:15px">−$311</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 7 — COACH
+══════════════════════════════════════════ -->
+<section class="section" id="s-coach">
+  <div class="section-title">Financial Coach</div>
+
+  <!-- Honest assessment -->
+  <div class="coach-header">
+    <div class="coach-greeting">Weekly Assessment · Apr 12, 2026</div>
+    <div class="coach-assessment">
+      Your financial foundation is genuinely strong — $324K net worth, credit scores at all-time highs, and over 22 months of liquid runway. This week was a transactional week: paycheck in, cards paid, LIAP subcontractor paid. Net worth dipped $311 from market noise, not behavior. The underlying trajectory is healthy.<br><br>
+      The honest challenge right now is that your LIAP income engine is underperforming relative to your best years. You're 12 days into April with $0 realized LIAP income for the month. The Audia Cup in June will be a significant correction, but the period between now and June needs attention. That's where the coaching focus belongs this week.
+    </div>
+  </div>
+
+  <!-- Priority actions -->
+  <div class="section-title">Priority Actions</div>
+
+  <div class="action-item">
+    <div class="action-num">1</div>
+    <div class="action-body">
+      <div class="action-title">Clear the 2025 tax balance — $1,289</div>
+      <div class="action-desc">This is the most urgent financial obligation you have right now. IRS underpayment penalties compound. With your liquid position you can clear this immediately. Do it before the Q2 estimated tax deadline (June 15).</div>
+    </div>
+  </div>
+
+  <div class="action-item">
+    <div class="action-num">2</div>
+    <div class="action-body">
+      <div class="action-title">Follow up on CW010 payment timing</div>
+      <div class="action-desc">The invoice is with Carson Wealth and $750 in subcontractor costs are already paid. Know the expected payment window. That money should land before the end of April ideally.</div>
+    </div>
+  </div>
+
+  <div class="action-item">
+    <div class="action-num">3</div>
+    <div class="action-body">
+      <div class="action-title">Replenish Apple Cash above $500</div>
+      <div class="action-desc">At $139 this account is nearly empty after the John Marshall payment. Transfer from Apple Savings or wait for the next paycheck Apr 24 — but flag this as a threshold to maintain going forward.</div>
+    </div>
+  </div>
+
+  <div class="action-item">
+    <div class="action-num">4</div>
+    <div class="action-body">
+      <div class="action-title">Confirm Audia Cup June details with AGV</div>
+      <div class="action-desc">Event is confirmed but scope drives the invoice amount. AGV_242 was $7,431 — your best Audia Cup to date. Understanding the 2026 scope now lets you plan the post-event cash flow allocation.</div>
+    </div>
+  </div>
+
+  <!-- Income growth opportunities -->
+  <div class="section-title" style="margin-top:4px">Income Growth Opportunities</div>
+
+  <div class="flag g">
+    <div class="flag-title">Remote post production — your highest leverage move</div>
+    <div class="flag-body">Post production is 95% margin — just your time and Adobe CC. One remote editing client at $1,000/month adds $12,000/year to LIAP with near-zero cost. That's a 83% increase on your current LIAP YTD pace. You have the skills, the equipment, and the portfolio. The missing piece is actively pitching beyond your existing client base. Three targeted outreach messages to agencies or corporate marketing teams this week costs nothing and could change your income picture significantly.</div>
+  </div>
+
+  <div class="flag g">
+    <div class="flag-title">Stock dividend income is compounding — feed it</div>
+    <div class="flag-body">Your 2025 dividend income was $719 across 12 months. At your current portfolio value it's running at approximately $900/year annualized in 2026. Adding $200/month into dividend-paying positions for 24 months would grow that to approximately $1,500/year in passive income — fully automatic, no effort required after the initial decision.</div>
+  </div>
+
+  <div class="flag g">
+    <div class="flag-title">Oil & Gas — understand what is driving 122% growth</div>
+    <div class="flag-body">Your royalties grew from $551 in 2024 to $1,220 in 2025. That is exceptional growth for a passive asset. Understanding whether this is production-driven (sustainable) or price-driven (volatile) matters enormously. If it is production-driven from a new well, there may be additional mineral rights adjacent to yours worth exploring. A 30-minute conversation with the operator could be worth thousands annually.</div>
+  </div>
+
+  <!-- Trend watch -->
+  <div class="section-title" style="margin-top:4px">Trend Watch</div>
+
+  <div class="flag a">
+    <div class="flag-title">LIAP revenue concentration risk</div>
+    <div class="flag-body">Audia Cup represents ~50% of your expected 2026 LIAP income. One event, one client. If AGV ever steps back your LIAP income drops by half in that year. Carson Wealth is your best diversification hedge — but they prefer project-by-project. A third anchor client would fundamentally change LIAP's stability profile.</div>
+  </div>
+
+  <div class="flag a">
+    <div class="flag-title">Mazda CX-5 depreciating ~$80/month</div>
+    <div class="flag-body">Currently valued at $4,650. At this rate crosses $3,000 in approximately 20 months. Your car fund is at $0. The gap to your $50K target vehicle is $19,850. Start directing small amounts toward the car fund now — even $100/month — so you are not caught unprepared.</div>
+  </div>
+
+  <div class="flag b">
+    <div class="flag-title">Apple relocation decision — the variable that changes everything</div>
+    <div class="flag-body">Every major financial goal you have is either directly or indirectly affected by the Apple promotion and relocation question. Home purchase, car timing, LIAP client geography, even your emergency fund sizing. This is not something to push to the background. The clearer the timeline becomes, the more precisely we can plan everything else.</div>
+  </div>
+
+  <!-- Bigger picture — monthly -->
+  <div class="section-title" style="margin-top:4px">The Bigger Picture</div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--text);line-height:1.8;font-weight:500;margin-bottom:12px">April 2026 — where things stand strategically</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.8">
+      You are in a genuinely strong financial position by almost any measure. Net worth up $59,350 from one year ago. Credit scores at all-time highs. No consumer debt carried month to month. Multiple income streams all active. Emergency fund fully funded at 2.4× the 9-month target.<br><br>
+      The strategic question for 2026 is not whether you are financially stable — you are — but what you do with the stability. The surplus above your emergency fund ($73,846) is not working as hard as it could. The LIAP business has demonstrated a $21,511 ceiling in 2023 and has not returned to that level. The Oil & Gas asset is growing and underexplored. The Apple promotion changes the calculus on everything if it happens.<br><br>
+      The most important financial decision you will make in 2026 is probably not a savings or spending decision. It is a career decision. Everything else follows from that.
+    </div>
+  </div>
+</section>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <a class="nav-item active" onclick="showSection('vitals',this)">
+    <span class="nav-icon">⚡</span>
+    <span class="nav-label">Vitals</span>
+  </a>
+  <a class="nav-item" onclick="showSection('spending',this)">
+    <span class="nav-icon">💳</span>
+    <span class="nav-label">Spend</span>
+  </a>
+  <a class="nav-item" onclick="showSection('income',this)">
+    <span class="nav-icon">📈</span>
+    <span class="nav-label">Income</span>
+  </a>
+  <a class="nav-item" onclick="showSection('goals',this)">
+    <span class="nav-icon">🎯</span>
+    <span class="nav-label">Goals</span>
+  </a>
+  <a class="nav-item" onclick="showSection('debt',this)">
+    <span class="nav-icon">🏦</span>
+    <span class="nav-label">Debt</span>
+  </a>
+  <a class="nav-item" onclick="showSection('history',this)">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">History</span>
+  </a>
+  <a class="nav-item" onclick="showSection('coach',this)">
+    <span class="nav-icon">🧠</span>
+    <span class="nav-label">Coach</span>
+  </a>
+</nav>
+
+<script>
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  document.getElementById('s-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+var TC = '#3d5c58', GC = 'rgba(0,201,167,0.06)';
+
+function mobileOpts(yFmt, minY) {
+  var o = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#0e1515', borderColor: 'rgba(0,201,167,0.3)', borderWidth: 1, titleColor: '#00C9A7', bodyColor: '#7a9e99' } },
+    scales: {
+      x: { ticks: { color: TC, font: { size: 9 }, maxRotation: 45, maxTicksLimit: 8 }, grid: { color: GC }, border: { display: false } },
+      y: { ticks: { color: TC, font: { size: 9 }, callback: yFmt || function(v){ return '$'+(v>=1000?Math.round(v/1000)+'K':v); }, maxTicksLimit: 6 }, grid: { color: GC }, border: { display: false } }
+    }
+  };
+  if (minY !== undefined) o.scales.y.min = minY;
+  return o;
+}
+
+// ── SPENDING CATEGORY CHART ──
+new Chart(document.getElementById('spendCatChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Housing','Food','Groceries','Health','Transport','Travel','Shopping','LIAP Exp.'],
+    datasets: [
+      { label: 'This month', data: [1093,320,180,10,0,0,0,750], backgroundColor: 'rgba(0,201,167,0.7)', borderRadius: 4 },
+      { label: '3M avg', data: [1180,410,277,65,45,320,180,420], backgroundColor: 'rgba(61,92,88,0.5)', borderRadius: 4 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#0e1515', borderColor: 'rgba(0,201,167,0.3)', borderWidth: 1, titleColor: '#00C9A7', bodyColor: '#7a9e99' } }, scales: { x: { ticks: { color: TC, font: { size: 9 }, maxRotation: 45 }, grid: { color: GC }, border: { display: false } }, y: { ticks: { color: TC, font: { size: 9 }, callback: function(v){ return '$'+v; } }, grid: { color: GC }, border: { display: false } } } }
+});
+
+// ── FOOD CHART ──
+new Chart(document.getElementById('foodChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan 26','Feb 26','Mar 26','Apr (part)'],
+    datasets: [
+      { label: 'Food+Grocery', data: [820,590,650,500], borderColor: '#00C9A7', backgroundColor: 'rgba(0,201,167,0.08)', fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#00C9A7' }
+    ]
+  },
+  options: mobileOpts(function(v){ return '$'+v; }, 400)
+});
+
+// ── INCOME DONUT ──
+new Chart(document.getElementById('incomeDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Apple $21.2K','LIAP $1,050','Stock $712','Oil & Gas $289','Other $350'],
+    datasets: [{ data: [21215,1050,712,289,350], backgroundColor: ['#4d9fff','#00C9A7','#a78bfa','#ffb547','#3d5c58'], borderWidth: 0, hoverOffset: 8 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0e1515', borderColor: 'rgba(0,201,167,0.3)', borderWidth: 1, titleColor: '#00C9A7', bodyColor: '#7a9e99', callbacks: { label: function(c){ return ' $'+c.parsed.toLocaleString(); } } } }, cutout: '60%' }
+});
+
+// ── LIAP PACE CHART ──
+new Chart(document.getElementById('liapPaceChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr'],
+    datasets: [
+      { label: '2023', data: [0,0,500,0], backgroundColor: 'rgba(61,92,88,0.5)', borderRadius: 3 },
+      { label: '2024', data: [0,0,0,2000], backgroundColor: 'rgba(77,159,255,0.5)', borderRadius: 3 },
+      { label: '2025', data: [0,0,0,0], backgroundColor: 'rgba(167,139,250,0.5)', borderRadius: 3 },
+      { label: '2026', data: [0,0,1050,0], backgroundColor: 'rgba(0,201,167,0.75)', borderRadius: 3 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#0e1515', borderColor: 'rgba(0,201,167,0.3)', borderWidth: 1, titleColor: '#00C9A7', bodyColor: '#7a9e99' } }, scales: { x: { ticks: { color: TC, font: { size: 10 } }, grid: { color: GC }, border: { display: false } }, y: { ticks: { color: TC, font: { size: 9 }, callback: function(v){ return '$'+v; } }, grid: { color: GC }, border: { display: false } } } }
+});
+
+// ── DECADE CHART ──
+new Chart(document.getElementById('decadeChart'), {
+  type: 'line',
+  data: {
+    labels: ['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','Apr 26'],
+    datasets: [{
+      label: 'Net worth',
+      data: [null,null,null,63988,75762,145469,197443,259476,313262,324733,324733],
+      borderColor: '#00C9A7',
+      backgroundColor: 'rgba(0,201,167,0.06)',
+      fill: true, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#00C9A7'
+    }]
+  },
+  options: mobileOpts(null, 0)
+});
+
+// ── DETAIL CHART ──
+new Chart(document.getElementById('detailChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan 24','Apr 24','Jul 24','Oct 24','Dec 24','Mar 25','Jun 25','Sep 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 12'],
+    datasets: [
+      { label: 'Net worth', data: [201148,213901,228716,242633,259476,265877,262731,292547,313262,321977,329489,332003,324733], borderColor: '#00C9A7', backgroundColor: 'rgba(0,201,167,0.06)', fill: true, tension: 0.3, pointRadius: 2 },
+      { label: 'Liquid', data: [null,null,null,null,211086,214399,211955,241597,259549,267248,271591,127592,124408], borderColor: '#4d9fff', tension: 0.3, pointRadius: 2, borderDash: [4,3], spanGaps: false }
+    ]
+  },
+  options: mobileOpts()
+});
+
+// ── COMPOSITION DONUT ──
+new Chart(document.getElementById('compChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Liquid $124K','Retirement $143K','Home equity $36K','Other assets $30K'],
+    datasets: [{ data: [124408,143235,36098,30243], backgroundColor: ['#00C9A7','#4d9fff','#a78bfa','#ffb547'], borderWidth: 0, hoverOffset: 8 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0e1515', borderColor: 'rgba(0,201,167,0.3)', borderWidth: 1, titleColor: '#00C9A7', bodyColor: '#7a9e99', callbacks: { label: function(c){ return ' $'+Math.round(c.parsed).toLocaleString(); } } } }, cutout: '55%' }
+});
+
+// ── PROJECTION CHART ──
+new Chart(document.getElementById('projChart'), {
+  type: 'line',
+  data: {
+    labels: ['Apr 26','Jan 27','Jan 28','Jan 29','Jan 30','Jan 31'],
+    datasets: [
+      { label: 'Conservative', data: [324733,355000,385000,405000,425000,445000], borderColor: '#3d5c58', tension: 0.3, pointRadius: 2, borderDash: [4,3] },
+      { label: 'Base', data: [324733,370000,415000,455000,495000,530000], borderColor: '#00C9A7', tension: 0.3, pointRadius: 2 },
+      { label: 'Growth', data: [324733,390000,445000,505000,570000,640000], borderColor: '#4d9fff', tension: 0.3, pointRadius: 2 }
+    ]
+  },
+  options: mobileOpts()
+});
+</script>
+</body>
+</html>
